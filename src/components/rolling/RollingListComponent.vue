@@ -6,7 +6,7 @@
       <v-form class="searchBox">
         <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item" variant="underlined"></v-combobox>
         <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined" required></v-text-field>
-        <v-btn variant="text" style="margin-top: 0.7em;">Search</v-btn>
+        <v-btn @click="handleSearch" variant="text" style="margin-top: 0.7em;">Search</v-btn>
       </v-form>
     </v-col>
   </v-row>
@@ -44,7 +44,7 @@
   import {ref} from "vue";
   import axios from "axios";
 
-  const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
+  const searchBox = ref({item: ['Title', 'Name'], searchType: 'Title', searchValue: ''})
   const pageInfo = ref({ pageNum: 1, pageSize: 10, length: 13, start: 1})
   const infoLists = ref([])
   const loading = ref(false)
@@ -65,6 +65,23 @@
     setTimeout(() => {
       loading.value = false
     }, 3000)
+  }
+
+  const handleSearch = async () => {
+    if (searchBox.value.searchValue === '') {
+      alert("Keyword input please")
+      console.log('select')
+      return
+    }
+
+    const { searchType, searchValue } = searchBox.value
+    const { data } = await axios.get(`http://localhost:8080/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
+    infoLists.value = data.dtoList
+    pageInfo.value.page = data.pageNum
+    pageInfo.value.pageSize = data.pageSize
+    pageInfo.value.length = data.totalPageNum
+    pageInfo.value.start = data.start
+
   }
 
   const handleClickLoading = async (page) => {

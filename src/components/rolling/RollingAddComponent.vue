@@ -37,7 +37,7 @@ import axios from "axios";
     titleRules: [(v) => !!v || "title is required"],
   });
 
-  const handleClickAdd = async () => { await axios.post(`http://localhost:8080/api/rolling/postRollingPaper`, rollingInfo.value) }
+  const handleClickAdd = async () => { await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value) }
 
   const handleChangeFile = async ( file ) => {
     if (!file) { return }
@@ -49,7 +49,7 @@ import axios from "axios";
       reader.readAsDataURL(item)
     })
 
-    await axios.post(`http://localhost:8080/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
   }
 </script>
 

@@ -4,8 +4,10 @@
       <v-btn class="registerBtn" color="info" :to="{name: 'RollingAdd'}">ADD</v-btn>
       <v-btn class="loadBtn" @click="handleClickLoading(pageInfo.page)">load</v-btn>
       <v-form class="searchBox">
-        <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item" variant="underlined"></v-combobox>
-        <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined" required></v-text-field>
+        <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item"
+                    variant="underlined"></v-combobox>
+        <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined"
+                      required></v-text-field>
         <v-btn variant="text" style="margin-top: 0.7em;">Search</v-btn>
       </v-form>
     </v-col>
@@ -14,7 +16,9 @@
     <v-col cols="12">
       <v-card>
         <div class="listWrap">
-          <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300" link>
+          <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300"
+                  link
+                  @click="moveDetail(info.id)">
             <template v-slot:loader="{ isActive }">
               <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
             </template>
@@ -25,14 +29,16 @@
                 <span class="me-1">{{ info.title }}</span>
               </v-card-subtitle>
             </v-card-item>
-  <!--          <v-card-text>-->
-  <!--            <div class="my-4 text-subtitle-1"></div>-->
-  <!--            <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>-->
-  <!--          </v-card-text>-->
+            <!--          <v-card-text>-->
+            <!--            <div class="my-4 text-subtitle-1"></div>-->
+            <!--            <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio seating.</div>-->
+            <!--          </v-card-text>-->
           </v-card>
         </div>
         <div class="text-center">
-          <v-pagination v-model="pageInfo.page" :show-first-last-page="true" :total-visible="pageInfo.pageSize" :length="pageInfo.length" :start="pageInfo.start" @click="() => handleClickPage(pageInfo.page)"></v-pagination>
+          <v-pagination v-model="pageInfo.page" :show-first-last-page="true" :total-visible="pageInfo.pageSize"
+                        :length="pageInfo.length" :start="pageInfo.start"
+                        @click="() => handleClickPage(pageInfo.page)"></v-pagination>
           <br>
         </div>
       </v-card>
@@ -41,68 +47,75 @@
 </template>
 
 <script setup>
-  import {ref} from "vue";
-  import axios from "axios";
+import {ref} from "vue";
+import axios from "axios";
+import {useRouter} from "vue-router";
 
-  const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
-  const pageInfo = ref({ pageNum: 1, pageSize: 10, length: 13, start: 1})
-  const infoLists = ref([])
-  const loading = ref(false)
+const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
+const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
+const infoLists = ref([])
+const loading = ref(false)
 
-  const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList`)
+const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList`)
+infoLists.value = data.dtoList
+pageInfo.value.page = data.pageNum
+pageInfo.value.pageSize = data.pageSize
+pageInfo.value.length = data.totalPageNum
+pageInfo.value.start = data.start
+
+const router = useRouter()
+
+const moveDetail = (id) => {
+  router.push({name: 'RollingDetail', params: {'id': id}})
+}
+
+const handleClickPage = async (page) => {
+  loading.value = true
+
+  const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
   infoLists.value = data.dtoList
-  pageInfo.value.page = data.pageNum
-  pageInfo.value.pageSize = data.pageSize
-  pageInfo.value.length = data.totalPageNum
-  pageInfo.value.start = data.start
 
-  const handleClickPage = async (page) => {
-    loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 3000)
+}
 
-    const { data } = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
-    infoLists.value = data.dtoList
+const handleClickLoading = async (page) => {
+  loading.value = true
 
-    setTimeout(() => {
-      loading.value = false
-    }, 3000)
-  }
+  const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
+  infoLists.value = data.dtoList
 
-  const handleClickLoading = async (page) => {
-    loading.value = true
-
-    const { data } = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
-    infoLists.value = data.dtoList
-
-    setTimeout(() => {
-      loading.value = false
-    }, 2000)
-  }
+  setTimeout(() => {
+    loading.value = false
+  }, 2000)
+}
 </script>
 
 <style scoped>
-  .listWrap {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    /*width: 80vw;*/
-    /*height: 90vh;*/
-  }
+.listWrap {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  /*width: 80vw;*/
+  /*height: 90vh;*/
+}
 
-  .loadBtn {
-    margin-left: 1em;
-  }
+.loadBtn {
+  margin-left: 1em;
+}
 
-  .searchBox {
-    display: flex;
-    width: 18vw;
-    float: right;
-  }
+.searchBox {
+  display: flex;
+  width: 18vw;
+  float: right;
+}
 
-  .searchTypeBox {
-    width: 6vw;
-  }
+.searchTypeBox {
+  width: 6vw;
+}
 
-  .searchValueBox {
-    width: 12vw;
-  }
+.searchValueBox {
+  width: 12vw;
+}
 </style>

@@ -4,8 +4,10 @@
       <v-btn class="registerBtn" color="info" :to="{name: 'RollingAdd'}">ADD</v-btn>
       <v-btn class="loadBtn" @click="handleClickLoading(pageInfo.page)">load</v-btn>
       <v-form class="searchBox">
-        <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item" variant="underlined"></v-combobox>
-        <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined" required></v-text-field>
+        <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item"
+                    variant="underlined"></v-combobox>
+        <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined"
+                      required></v-text-field>
         <v-btn @click="handleSearch" variant="text" style="margin-top: 0.7em;">Search</v-btn>
       </v-form>
     </v-col>
@@ -50,7 +52,7 @@ import axios from "axios";
 import {useRouter} from "vue-router";
 
 const searchBox = ref({item: ['Title', 'Name'], searchType: 'Title', searchValue: ''})
-const pageInfo = ref({ pageNum: 1, pageSize: 10, length: 13, start: 1})
+const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
 const infoLists = ref([])
 const loading = ref(false)
 
@@ -62,7 +64,6 @@ pageInfo.value.length = data.totalPageNum
 pageInfo.value.start = data.start
 
 const router = useRouter()
-
 const moveDetail = (id) => {
   router.push({name: 'RollingDetail', params: {'id': id}})
 }
@@ -73,25 +74,27 @@ const handleClickPage = async (page) => {
   const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
   infoLists.value = data.dtoList
 
-  const handleSearch = async () => {
-    if (searchBox.value.searchValue === '') {
-      alert("Keyword input please")
-      console.log('select')
-      return
-    }
+  setTimeout(() => {
+    loading.value = false
+  }, 3000)
+}
 
-    const { searchType, searchValue } = searchBox.value
-    const { data } = await axios.get(`http://localhost:8080/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
-    infoLists.value = data.dtoList
-    pageInfo.value.page = data.pageNum
-    pageInfo.value.pageSize = data.pageSize
-    pageInfo.value.length = data.totalPageNum
-    pageInfo.value.start = data.start
-
+const handleSearch = async () => {
+  if (searchBox.value.searchValue === '') {
+    alert("Keyword input please")
+    console.log('select')
+    return
   }
 
-  const handleClickLoading = async (page) => {
-    loading.value = true
+  const {searchType, searchValue} = searchBox.value
+  const {data} = await axios.get(`http://localhost:8080/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
+  infoLists.value = data.dtoList
+  pageInfo.value.page = data.pageNum
+  pageInfo.value.pageSize = data.pageSize
+  pageInfo.value.length = data.totalPageNum
+  pageInfo.value.start = data.start
+
+}
 
 const handleClickLoading = async (page) => {
   loading.value = true

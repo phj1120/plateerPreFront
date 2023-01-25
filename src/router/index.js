@@ -29,8 +29,9 @@ const routes = [
         path: 'add',
         name: 'RollingAdd',
         component: () => import('@/components/rolling/RollingAddComponent.vue')
-      },{
-        path: 'detail/:title',
+      },
+      {
+        path: ':id',
         name: 'RollingDetail',
         component: () => import('@/components/rolling/RollingDetailComponent.vue')
       },
@@ -40,7 +41,7 @@ const routes = [
   {
     path: '/login',
     name: 'LoginPage',
-    component: () => import('@/views/LoginPage.vue')
+    // component: () => import('@/views/LoginPage.vue')
   },
   {
     path: '/',

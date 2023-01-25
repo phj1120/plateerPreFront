@@ -26,7 +26,7 @@
             <v-card-item>
               <v-card-title>{{ info.target }}</v-card-title>
               <v-card-subtitle>
-                <span class="me-1">{{ info.title }}</span>
+                <span class="me-1">{{ info.title }} {{info.replyCount}}</span>
               </v-card-subtitle>
             </v-card-item>
             <!--          <v-card-text>-->
@@ -62,6 +62,7 @@ pageInfo.value.page = data.pageNum
 pageInfo.value.pageSize = data.pageSize
 pageInfo.value.length = data.totalPageNum
 pageInfo.value.start = data.start
+console.log(data)
 
 const router = useRouter()
 const moveDetail = (id) => {

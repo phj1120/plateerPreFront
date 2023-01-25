@@ -54,7 +54,7 @@
   const yesterdayList = ref([])
   const rollingList = ref([])
 
-  const { data } = await axios.get(`http://localhost:8080/api/rolling/getRollingAllList`)
+  const { data } = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingAllList`)
   rollingList.value = data
 
   const today = getTodayFormat()

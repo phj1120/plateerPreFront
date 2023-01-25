@@ -48,7 +48,6 @@
 import {ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-
 const searchBox = ref({item: ['Title', 'Name'], searchType: 'Title', searchValue: ''})
 const pageInfo = ref({ pageNum: 1, pageSize: 10, length: 13, start: 1})
 const infoLists = ref([])

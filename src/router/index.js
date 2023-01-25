@@ -21,7 +21,9 @@ const routes = [
       {
         path: 'list',
         name: 'RollingList',
-        component: () => import('@/components/rolling/RollingListComponent.vue')
+        component: () => import('@/components/rolling/RollingListComponent.vue'),
+
+
       },
       {
         path: 'add',
@@ -33,6 +35,7 @@ const routes = [
         name: 'RollingDetail',
         component: () => import('@/components/rolling/RollingDetailComponent.vue')
       },
+
     ]
   },
   {

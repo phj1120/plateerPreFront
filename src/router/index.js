@@ -29,7 +29,7 @@ const routes = [
         component: () => import('@/components/rolling/RollingAddComponent.vue')
       },
       {
-        path: 'detail',
+        path: ':id',
         name: 'RollingDetail',
         component: () => import('@/components/rolling/RollingDetailComponent.vue')
       },

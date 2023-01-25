@@ -14,7 +14,7 @@
     <v-col cols="12">
       <v-card>
         <div class="listWrap">
-          <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300" link>
+          <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300" link @click="">
             <template v-slot:loader="{ isActive }">
               <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
             </template>
@@ -48,8 +48,9 @@
   const pageInfo = ref({ pageNum: 1, pageSize: 10, length: 13, start: 1})
   const infoLists = ref([])
   const loading = ref(false)
-
   const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList`)
+
+
   infoLists.value = data.dtoList
   pageInfo.value.page = data.pageNum
   pageInfo.value.pageSize = data.pageSize

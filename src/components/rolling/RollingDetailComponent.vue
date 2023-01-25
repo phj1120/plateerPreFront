@@ -37,56 +37,56 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import axios from "axios";
-import {useRoute, useRouter} from "vue-router";
+  import {ref} from "vue";
+  import axios from "axios";
+  import {useRoute, useRouter} from "vue-router";
 
-const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
-const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
-const infoLists = ref([])
-const loading = ref(false)
+  const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
+  const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
+  const infoLists = ref([])
+  const loading = ref(false)
 
-const router = useRouter()
-const route = useRoute()
+  const router = useRouter()
+  const route = useRoute()
 
-const rollingId = route.params.id;
-const {data} = await axios.get(`http://localhost:8080/api/rolling/` + rollingId)
-const replies = data.replyDTOs
-const targetName = data.targetName
+  const rollingId = route.params.id;
+  const {data} = await axios.get(`http://localhost:8080/api/rolling/` + rollingId)
+  const replies = data.replyDTOs
+  const targetName = data.targetName
 
-const clickAddButton = () => {
+  const clickAddButton = () => {
 
-}
+  }
 
-const moveDetail = (id) => {
-  router.push({name: 'RollingDetail', params: {'id': id}})
-}
+  const moveDetail = (id) => {
+    router.push({name: 'RollingDetail', params: {'id': id}})
+  }
 </script>
 
 <style scoped>
-.listWrap {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 auto;
-  /*width: 80vw;*/
-  /*height: 90vh;*/
-}
+  .listWrap {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    /*width: 80vw;*/
+    /*height: 90vh;*/
+  }
 
-.loadBtn {
-  margin-left: 1em;
-}
+  .loadBtn {
+    margin-left: 1em;
+  }
 
-.searchBox {
-  display: flex;
-  width: 18vw;
-  float: right;
-}
+  .searchBox {
+    display: flex;
+    width: 18vw;
+    float: right;
+  }
 
-.searchTypeBox {
-  width: 6vw;
-}
+  .searchTypeBox {
+    width: 6vw;
+  }
 
-.searchValueBox {
-  width: 12vw;
-}
+  .searchValueBox {
+    width: 12vw;
+  }
 </style>

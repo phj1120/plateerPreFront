@@ -1,5 +1,5 @@
 // Composables
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
@@ -7,33 +7,43 @@ const routes = [
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-        path: '/',
-        name: 'Home',
-        // redirect: '/todo/list',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
+        path: '',
+        name: 'HomePage',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/HomePage.vue'),
       },
-      {
-        path: '/todo/list',
-        name: 'TodoListPage',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/todo/TodoListPage.vue'),
-      },
-      {
-        path: '/todo/:id',
-        name: 'TodoPage',
-        meta: ['auth', 'todo'],
-        component: () => import(/* webpackChunkName: "home" */ '@/views/todo/TodoPage.vue'),
-      },
-      {
-        path: '/login',
-        name: 'LoginPage',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/LoginPage.vue'),
-      },
-      {
-        path: '/sampleTest',
-        name: 'SampleTest',
-        component: () => import('@/views/SampleTestPage.vue'),
-      }
     ],
+  },
+  {
+    path: '/rolling',
+    name: 'RollingPage',
+    component: () => import('@/views/RollingPage.vue'),
+    children: [
+      {
+        path: 'list',
+        name: 'RollingList',
+        component: () => import('@/components/rolling/RollingListComponent.vue')
+      },
+      {
+        path: 'add',
+        name: 'RollingAdd',
+        component: () => import('@/components/rolling/RollingAddComponent.vue')
+      },
+      {
+        path: 'detail',
+        name: 'RollingDetail',
+        component: () => import('@/components/rolling/RollingDetailComponent.vue')
+      },
+    ]
+  },
+  {
+    path: '/login',
+    name: 'LoginPage',
+    component: () => import('@/views/LoginPage.vue')
+  },
+  {
+    path: '/',
+    name: 'LogoutPage',
+    redirect: '/',
   },
 ]
 
@@ -41,16 +51,5 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 })
-
-router.beforeEach((to) => {
-  // 인증이 필요한 페이지에접근 했지만, localstorage 에 access 토큰이 없는 경우 로그인 페이지로 튕김
-  if (Object.values(to.meta).indexOf('auth') == -1) {
-    return
-  }
-  const access = localStorage.getItem('access')
-  if (access == null) {
-    router.push({name: 'LoginPage'})
-  }
-});
 
 export default router

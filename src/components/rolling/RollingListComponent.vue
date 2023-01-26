@@ -51,7 +51,7 @@
   const infoLists = ref([])
   const loading = ref(false)
 
-  const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList`)
+  const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList`)
   infoLists.value = data.dtoList
   pageInfo.value.page = data.pageNum
   pageInfo.value.pageSize = data.pageSize
@@ -67,7 +67,7 @@
   const handleClickPage = async (page) => {
     loading.value = true
 
-    const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
+    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList?page=${page}`)
     infoLists.value = data.dtoList
 
     setTimeout(() => {
@@ -83,7 +83,7 @@
     }
 
     const {searchType, searchValue} = searchBox.value
-    const {data} = await axios.get(`http://localhost:8080/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
+    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
     infoLists.value = data.dtoList
     pageInfo.value.page = data.pageNum
     pageInfo.value.pageSize = data.pageSize
@@ -95,7 +95,7 @@
   const handleClickLoading = async (page) => {
     loading.value = true
 
-    const {data} = await axios.get(`http://localhost:8080/api/rolling/getRollingList?page=${page}`)
+    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList?page=${page}`)
     infoLists.value = data.dtoList
 
     setTimeout(() => {

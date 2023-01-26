@@ -30,27 +30,22 @@
 <script setup>
 import {ref} from "vue";
 import axios from "axios";
-
 const files = ref([])
 const uploadimageurl = ref([])
 const rollingInfo = ref({
   nameRules: [(v) => !!v || "target is required", (v) => (v && v.length <= 10) || "target must be less than 10 characters",],
   titleRules: [(v) => !!v || "title is required"],
 });
-
 const handleClickAdd = async () => {
   const formData = new FormData()
-
   files.value.forEach((item) => {
     formData.append('filelist', item)
   })
-
   if (formData.get('filelist')) {
     await axios.post(`http://localhost:8080/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
   }
   await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value)
 }
-
 const handleChangeFile = (file) => {
   if (!file) {
     return
@@ -64,7 +59,6 @@ const handleChangeFile = (file) => {
     reader.readAsDataURL(item)
   })
 }
-
 const handleDeleteFile = () => {
   uploadimageurl.value = [];
 }
@@ -74,7 +68,6 @@ const handleDeleteFile = () => {
 .formLength {
   width: 50vw;
 }
-
 .vbtn {
   float: right;
   margin-bottom: 1em;

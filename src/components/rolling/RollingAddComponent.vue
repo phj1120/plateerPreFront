@@ -38,15 +38,23 @@ const rollingInfo = ref({
   titleRules: [(v) => !!v || "title is required"],
 });
 
+<<<<<<< HEAD
 const handleClickAdd = async () => {
   const formData = new FormData()
+=======
+  const handleClickAdd = async () => { await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value) }
+>>>>>>> 87e06bd0bda3b03860ebfcc4a9d599e97bc30320
 
   files.value.forEach((item) => {
     formData.append('filelist', item)
   })
 
+<<<<<<< HEAD
   if (formData.get('filelist')) {
     await axios.post(`http://localhost:8080/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+=======
+    await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+>>>>>>> 87e06bd0bda3b03860ebfcc4a9d599e97bc30320
   }
   await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value)
 }

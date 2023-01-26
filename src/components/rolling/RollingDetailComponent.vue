@@ -50,7 +50,7 @@
   const route = useRoute()
 
   const rollingId = route.params.id;
-  const {data} = await axios.get(`http://localhost:8080/api/rolling/` + rollingId)
+  const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
   const replies = data.replyDTOs
   const targetName = data.targetName
 

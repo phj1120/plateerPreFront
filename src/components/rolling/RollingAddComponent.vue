@@ -42,7 +42,7 @@ const handleClickAdd = async () => {
     formData.append('filelist', item)
   })
   if (formData.get('filelist')) {
-    await axios.post(`http://localhost:8080/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+    await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
   }
   await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value)
 }

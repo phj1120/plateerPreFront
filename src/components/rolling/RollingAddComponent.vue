@@ -18,7 +18,7 @@
           </div>
           <br>
           <div class="center">
-            <v-btn class="vbtn" color="primary" @click="handleClickAdd">작성하기</v-btn>
+            <v-btn class="vbtn" color="primary" @click="handleClickAdd" :to="{ name: 'RollingList' }">작성하기</v-btn>
             <v-btn class="vbtn" :to="{ name: 'RollingList' }">목록으로</v-btn>
           </div>
         </v-form>
@@ -45,6 +45,7 @@ const handleClickAdd = async () => {
     await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
   }
   await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value)
+
 }
 const handleChangeFile = (file) => {
   if (!file) {

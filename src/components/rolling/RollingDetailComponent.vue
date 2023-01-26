@@ -3,17 +3,15 @@
     <v-col cols="12">
       <h2>{{ targetName }}</h2>
       <v-form class="searchBox">
-        <v-btn color="primary" @click="dialog = true">
+        <v-btn color="primary" @click="changeDialogStatus">
         ADD
       </v-btn>
-        <div v-if="dialog==true">
           <v-dialog
             v-model="dialog"
           >
-          <RollingModalComponent @clickAddButton="clickAddButton"></RollingModalComponent>
+          <RollingModalComponent @changeDialogStatus="changeDialogStatus"
+                                 @saveReply="saveReply" :rollingId ="rollingId" ></RollingModalComponent>
           </v-dialog>
-        </div>
-
       </v-form>
     </v-col>
   </v-row>
@@ -48,7 +46,7 @@
 </template>
 
 <script setup>
-  import {ref} from "vue";
+import {computed, ref} from "vue";
   import axios from "axios";
   import {useRoute, useRouter} from "vue-router";
   import RollingModalComponent from "@/components/rolling/RollingModalComponent.vue";
@@ -63,17 +61,27 @@
 
   const rollingId = route.params.id;
   const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
-  const replies = data.replyDTOs
+  const replies = ref(data.replyDTOs)
   const targetName = data.targetName
 
+
   const dialog = ref(false)
-  const clickAddButton = () => {
-      dialog.value= false
+  const changeDialogStatus = () => {
+    dialog.value = !dialog.value
   }
 
   const moveDetail = (id) => {
     router.push({name: 'RollingDetail', params: {'id': id}})
   }
+
+const saveReply = async (reply) =>{
+  //http://armysseung.iptime.org:3258/api/rolling/postRollingPaper
+  await axios.post(`http://localhost:8080/api/reply`,reply).then( async ()=>{
+    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
+    replies.value = data.replyDTOs
+  })
+  changeDialogStatus()
+}
 </script>
 
 <style scoped>

@@ -3,7 +3,17 @@
     <v-col cols="12">
       <h2>{{ targetName }}</h2>
       <v-form class="searchBox">
-        <v-btn variant="text" @click="clickAddButton">Add</v-btn>
+        <v-btn color="primary" @click="dialog = true">
+        ADD
+      </v-btn>
+        <div v-if="dialog==true">
+          <v-dialog
+            v-model="dialog"
+          >
+          <RollingModalComponent @clickAddButton="clickAddButton"></RollingModalComponent>
+          </v-dialog>
+        </div>
+
       </v-form>
     </v-col>
   </v-row>
@@ -34,12 +44,14 @@
       </v-card>
     </v-col>
   </v-row>
+
 </template>
 
 <script setup>
   import {ref} from "vue";
   import axios from "axios";
   import {useRoute, useRouter} from "vue-router";
+  import RollingModalComponent from "@/components/rolling/RollingModalComponent.vue";
 
   const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
   const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
@@ -54,8 +66,9 @@
   const replies = data.replyDTOs
   const targetName = data.targetName
 
+  const dialog = ref(false)
   const clickAddButton = () => {
-
+      dialog.value= false
   }
 
   const moveDetail = (id) => {

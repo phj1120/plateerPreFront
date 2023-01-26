@@ -50,5 +50,6 @@
     { icon: 'mdi-account', text: 'Rollingpaper', name: 'RollingList' },
     { icon: 'mdi-login', text: 'Login', name: 'LoginPage' },
     { icon: 'mdi-logout', text: 'Logout', name: 'LogoutPage' },
+    { icon: 'mdi-account', text: 'Admin', name: 'AdminPage' },
   ])
 </script>

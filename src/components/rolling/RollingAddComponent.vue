@@ -45,8 +45,9 @@ const handleClickAdd = async () => {
     await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingFile`, formData, {headers: {'Content-Type': 'multipart/form-data'}})
   }
   await axios.post(`http://armysseung.iptime.org:3258/api/rolling/postRollingPaper`, rollingInfo.value)
-
 }
+
+
 const handleChangeFile = (file) => {
   if (!file) {
     return

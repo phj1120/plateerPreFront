@@ -75,8 +75,7 @@ import {computed, ref} from "vue";
   }
 
 const saveReply = async (reply) =>{
-  //http://armysseung.iptime.org:3258/api/rolling/postRollingPaper
-  await axios.post(`http://localhost:8080/api/reply`,reply).then( async ()=>{
+  await axios.post(`http://armysseung.iptime.org:3258/api/reply`,reply).then( async ()=>{
     const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
     replies.value = data.replyDTOs
   })
@@ -89,8 +88,6 @@ const saveReply = async (reply) =>{
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
-    /*width: 80vw;*/
-    /*height: 90vh;*/
   }
 
   .loadBtn {

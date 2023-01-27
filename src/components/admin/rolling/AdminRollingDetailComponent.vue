@@ -3,15 +3,7 @@
     <v-col cols="12">
       <h2>{{ targetName }}</h2>
       <v-form class="searchBox">
-        <v-btn color="primary" @click="changeDialogStatus">
-        ADD
-      </v-btn>
-          <v-dialog
-            v-model="dialog"
-          >
-          <RollingModalComponent @changeDialogStatus="changeDialogStatus"
-                                 @saveReply="saveReply" :rollingId ="rollingId" ></RollingModalComponent>
-          </v-dialog>
+        <v-btn variant="text" @click="clickAddButton">Add</v-btn>
       </v-form>
     </v-col>
   </v-row>
@@ -42,14 +34,12 @@
       </v-card>
     </v-col>
   </v-row>
-
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
+  import {ref} from "vue";
   import axios from "axios";
   import {useRoute, useRouter} from "vue-router";
-  import RollingModalComponent from "@/components/rolling/RollingModalComponent.vue";
 
   const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
   const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
@@ -61,26 +51,16 @@ import {computed, ref} from "vue";
 
   const rollingId = route.params.id;
   const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
-  const replies = ref(data.replyDTOs)
+  const replies = data.replyDTOs
   const targetName = data.targetName
 
+  const clickAddButton = () => {
 
-  const dialog = ref(false)
-  const changeDialogStatus = () => {
-    dialog.value = !dialog.value
   }
 
   const moveDetail = (id) => {
     router.push({name: 'RollingDetail', params: {'id': id}})
   }
-
-const saveReply = async (reply) =>{
-  await axios.post(`http://armysseung.iptime.org:3258/api/reply`,reply).then( async ()=>{
-    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
-    replies.value = data.replyDTOs
-  })
-  changeDialogStatus()
-}
 </script>
 
 <style scoped>
@@ -88,6 +68,8 @@ const saveReply = async (reply) =>{
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
+    /*width: 80vw;*/
+    /*height: 90vh;*/
   }
 
   .loadBtn {

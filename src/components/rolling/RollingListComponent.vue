@@ -17,7 +17,7 @@
       <v-card>
         <div class="listWrap">
           <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300" link
-                  @click="moveDetail(info.id)">
+                  :to="{name: 'RollingDetail', params: {'id': info.id}}">
             <template v-slot:loader="{ isActive }">
               <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
             </template>
@@ -25,7 +25,7 @@
             <v-card-item>
               <v-card-title>{{ info.target }}</v-card-title>
               <v-card-subtitle>
-                <span class="me-1">{{ info.title }} {{info.replyCount}}</span>
+                <span class="me-1">{{ info.replyCount == 0 ? info.title : info.title + '[' + info.replyCount + ']' }}</span>
               </v-card-subtitle>
             </v-card-item>
           </v-card>
@@ -59,10 +59,7 @@
   pageInfo.value.start = data.start
   console.log(data)
 
-  const router = useRouter()
-  const moveDetail = (id) => {
-    router.push({name: 'RollingDetail', params: {'id': id}})
-  }
+
 
   const handleClickPage = async (page) => {
     loading.value = true

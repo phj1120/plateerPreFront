@@ -1,7 +1,8 @@
 import axios from "axios";
 
 
-const domain = 'http://192.168.1.127:8080'
+const domain = 'http://armysseung.iptime.org:3258'
+// const domain = 'http://192.168.1.127:8080'
 
 
 export const addRolling = async (rollingInfo) => {

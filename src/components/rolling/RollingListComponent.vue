@@ -1,122 +1,82 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <v-btn class="registerBtn" color="info" :to="{name: 'RollingAdd'}">ADD</v-btn>
-      <v-btn class="loadBtn" @click="handleClickLoading(pageInfo.page)">load</v-btn>
-      <v-form class="searchBox">
-        <v-combobox class="searchTypeBox" label="Type" v-model="searchBox.searchType" :items="searchBox.item"
-                    variant="underlined"></v-combobox>
-        <v-text-field class="searchValueBox" v-model="searchBox.searchValue" label="Keyword" variant="underlined"
-                      required></v-text-field>
-        <v-btn @click="handleSearch" variant="text" style="margin-top: 0.7em;">Search</v-btn>
-      </v-form>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col cols="12">
-      <v-card>
-        <div class="listWrap">
-          <v-card v-for="info in infoLists" :loading="loading" :key="info.title" class="mx-auto my-6 mr-2" width="300" link
-                  :to="{name: 'RollingDetail', params: {'id': info.id}}">
-            <template v-slot:loader="{ isActive }">
-              <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
-            </template>
-            <v-img cover height="250" :src="info.imgSrc"></v-img>
-            <v-card-item>
-              <v-card-title>{{ info.target }}</v-card-title>
-              <v-card-subtitle>
-                <span class="me-1">{{ info.replyCount == 0 ? info.title : info.title + '[' + info.replyCount + ']' }}</span>
-              </v-card-subtitle>
-            </v-card-item>
-          </v-card>
-        </div>
-        <div class="text-center">
-          <v-pagination v-model="pageInfo.page" :show-first-last-page="true" :total-visible="pageInfo.pageSize"
-                        :length="pageInfo.length" :start="pageInfo.start"
-                        @click="() => handleClickPage(pageInfo.page)"></v-pagination>
-          <br>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <v-row>
+      <v-col cols="12">
+        <v-btn class="ma-4" color="success" @click="emits('handleMoveAdd')">ADD</v-btn>
+      </v-col>
+    </v-row>
+  </div>
+  <v-table>
+    <thead>
+    <tr class="bg-grey-darken-2">
+      <th class="text-center text-grey-lighten-2">ID</th>
+      <th class="text-center text-grey-lighten-2">Image</th>
+      <th class="text-center text-grey-lighten-2">Title</th>
+      <th class="text-center text-grey-lighten-2">Target</th>
+      <th class="text-center text-grey-lighten-2">Writer</th>
+      <th class="text-center text-grey-lighten-2 w-1">Create Date</th>
+      <th class="text-center text-grey-lighten-2 w-0"></th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr class="he" v-for="rolling in rollings" :key="rolling.id" style="height: 4em">
+        <td class="text-center">{{ rolling.id }}</td>
+        <td class="text-center">
+          <img class="mt-2" :src="getImagePath(rolling.imgSrc)" width="50" height="50" />
+        </td>
+        <td class="text-center">{{ rolling.title }}</td>
+        <td class="text-center">{{ rolling.target }}</td>
+        <td class="text-center">{{ rolling.writer }}</td>
+        <td class="text-center">{{ rolling.createDt }}</td>
+        <td>
+          <v-btn color="info" @click="clickDetail(rolling.id)">Detail</v-btn>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
+
+  <div class="text-center">
+    <v-pagination v-model="paginationInfo.pageNum" :show-first-last-page="true" :total-visible="paginationInfo.pageSize"
+                  :length="paginationInfo.length" :start="paginationInfo.start"
+                  @click="clickChangePage"></v-pagination>
+    <br>
+  </div>
 </template>
 
 <script setup>
+import {getImagePath, getRollingList} from "@/apis/rolling/RollingApis";
   import {ref} from "vue";
-  import axios from "axios";
-  import {useRouter} from "vue-router";
 
-  const searchBox = ref({item: ['Title', 'Name'], searchType: 'Title', searchValue: ''})
-  const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
-  const infoLists = ref([])
-  const loading = ref(false)
+  // pageSearch : {page: null, size:null, types: null, keyword: null}
+  const props = defineProps(['pageSearch'])
+  const emits = defineEmits(['handleMoveAdd', 'handleMoveDetail', 'handleChangePage', 'handleRollingSearch'])
+  const paginationInfo = ref({pageNum: 1, pageSize: 10, length: null, start: 1})
+  const rollings = ref({})
 
-  const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList`)
-  infoLists.value = data.dtoList
-  pageInfo.value.page = data.pageNum
-  pageInfo.value.pageSize = data.pageSize
-  pageInfo.value.length = data.totalPageNum
-  pageInfo.value.start = data.start
-  console.log(data)
-
-
-
-  const handleClickPage = async (page) => {
-    loading.value = true
-
-    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList?page=${page}`)
-    infoLists.value = data.dtoList
-
-    setTimeout(() => {
-      loading.value = false
-    }, 3000)
+  const clickChangePage = () => {
+    emits('handleChangePage', paginationInfo.value.pageNum)
   }
 
-  const handleSearch = async () => {
-    if (searchBox.value.searchValue === '') {
-      alert("Keyword input please")
-      console.log('select')
-      return
-    }
-
-    const {searchType, searchValue} = searchBox.value
-    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getSearchRollingList?searchType=${searchType}&searchValue=${searchValue}`)
-    infoLists.value = data.dtoList
-    pageInfo.value.page = data.pageNum
-    pageInfo.value.pageSize = data.pageSize
-    pageInfo.value.length = data.totalPageNum
-    pageInfo.value.start = data.start
-
+  const clickDetail = (id) => {
+    emits('handleMoveDetail', id)
   }
 
-  const handleClickLoading = async (page) => {
-    loading.value = true
-
-    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/getRollingList?page=${page}`)
-    infoLists.value = data.dtoList
-
-    setTimeout(() => {
-      loading.value = false
-    }, 2000)
+  const getRollings = async () => {
+    const data = await getRollingList(props.pageSearch)
+    paginationInfo.value.pageNum = data.page
+    paginationInfo.value.pageSize = data.size
+    paginationInfo.value.length = data.last
+    rollings.value = data.dtoList
   }
+
+
+  getRollings()
 </script>
 
 <style scoped>
-  .listWrap {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    /*width: 80vw;*/
-    /*height: 90vh;*/
-  }
-
-  .loadBtn {
-    margin-left: 1em;
-  }
-
   .searchBox {
     display: flex;
-    width: 18vw;
+    width: 25vw;
     float: right;
   }
 

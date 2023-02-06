@@ -1,71 +1,49 @@
-// Composables
 import { createRouter, createWebHistory } from 'vue-router'
+import {tr} from "vuetify/locale";
 
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
-    children: [
-      {
-        path: '',
-        name: 'HomePage',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/HomePage.vue'),
-      },
-    ],
+    redirect: '/rolling/list',
   },
   {
     path: '/rolling',
-    name: 'RollingPage',
-    component: () => import('@/views/RollingPage.vue'),
+    name: 'Rolling',
+    redirect: '/rolling/list',
     children: [
       {
         path: 'list',
-        name: 'RollingList',
-        component: () => import('@/components/rolling/RollingListComponent.vue')
+        name: 'RollingListPage',
+        component: () => import('@/views/rolling/RollingListPage.vue')
       },
       {
         path: 'add',
-        name: 'RollingAdd',
-        component: () => import('@/components/rolling/RollingAddComponent.vue')
+        name: 'RollingAddPage',
+        component: () => import('@/views/rolling/RollingAddPage.vue')
       },
       {
-        path: ':id',
-        name: 'RollingDetail',
-        component: () => import('@/components/rolling/RollingDetailComponent.vue')
+        path: 'detail/:id',
+        name: 'RollingDetailPage',
+        component: () => import('@/views/rolling/RollingDetailPage.vue'),
+        props: true
+      },
+      {
+        path: 'modify/:id',
+        name: 'RollingModifyPage',
+        component: () => import('@/views/rolling/RollingModifyPage.vue'),
+        props: true
       },
     ]
   },
   {
     path: '/login',
     name: 'LoginPage',
-    // component: () => import('@/views/LoginPage.vue')
+    component: () => import('@/views/common/LoginPage.vue')
   },
   {
-    path: '/',
+    path: '/logout',
     name: 'LogoutPage',
-    redirect: '/',
-  },
-  {
-    path: '/admin',
-    name: 'AdminPage',
-    component: () => import('@/views/AdminPage.vue'),
-    children: [
-      {
-        path: '/admin/rollingList',
-        name: 'AdminRollingList',
-        component: () => import('@/components/admin/rolling/AdminRollingListComponent.vue')
-      },
-      {
-        path: '/admin/rollingDetail',
-        name: 'AdminRollingDetail',
-        component: () => import('@/components/admin/rolling/AdminRollingDetailComponent.vue')
-      },
-      {
-        path: '/admin/memberList',
-        name: 'AdminMemberList',
-        component: () => import('@/components/admin/member/MemberListComponent.vue')
-      },
-    ]
+    component: () => import('@/views/common/LogoutPage.vue')
   },
 ]
 

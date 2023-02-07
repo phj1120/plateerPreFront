@@ -1,113 +1,74 @@
 <template>
-  <v-row>
-    <v-col cols="12">
-      <h2>{{ targetName }}</h2>
-      <v-form class="searchBox">
-        <v-btn color="primary" @click="changeDialogStatus">
-        ADD
-      </v-btn>
-          <v-dialog
-            v-model="dialog"
-          >
-          <RollingModalComponent @changeDialogStatus="changeDialogStatus"
-                                 @saveReply="saveReply" :rollingId ="rollingId" ></RollingModalComponent>
-          </v-dialog>
-      </v-form>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col cols="12">
-      <v-card>
-        <div class="listWrap">
-          <v-card v-for="reply in replies" :loading="loading" :key="reply.id" class="mx-auto my-6 mr-2" width="300"
-                  link
-                  @click="moveDetail(reply.id)">
-            <template v-slot:loader="{ isActive }">
-              <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
-            </template>
-            <v-card-item>
-              <v-card-title>{{ reply.title }}</v-card-title>
-              <v-card-subtitle>
-                <span class="me-1">{{ reply.writer }}</span>
-              </v-card-subtitle>
-            </v-card-item>
-          </v-card>
-        </div>
-        <!--        <div class="text-center">-->
-        <!--          <v-pagination v-model="pageInfo.page" :show-first-last-page="true" :total-visible="pageInfo.pageSize"-->
-        <!--                        :length="pageInfo.length" :start="pageInfo.start"-->
-        <!--                        @click="() => handleClickPage(pageInfo.page)"></v-pagination>-->
-        <!--          <br>-->
-        <!--        </div>-->
-      </v-card>
-    </v-col>
-  </v-row>
+  <v-table class="mt-10">
+    <tbody>
+      <tr>
+        <th class="text-center bg-grey-darken-2">ID</th>
+        <td class="text-center">{{ rolling.id }}</td>
+      </tr>
 
+      <tr>
+        <th class="text-center bg-grey-darken-2">Title</th>
+        <td class="text-center">{{ rolling.title }}</td>
+      </tr>
+
+      <tr>
+        <th class="text-center bg-grey-darken-2">Target</th>
+        <td class="text-center">{{ rolling.target }}</td>
+      </tr>
+
+      <tr>
+        <th class="text-center bg-grey-darken-2">Image</th>
+        <td class="text-center">
+          <v-row class="ma-2">
+            <div style="margin: 0 auto">
+              <img class="ma-2" v-for="img in rolling.imgSrcs" :src="getImagePath(img)" width="300" />
+            </div>
+          </v-row>
+<!--          {{ rolling.imgSrcs }}-->
+        </td>
+      </tr>
+
+      <tr>
+        <th class="text-center bg-grey-darken-2">Writer</th>
+        <td class="text-center">{{ rolling.writer }}</td>
+      </tr>
+
+      <tr>
+        <th class="text-center bg-grey-darken-2">Create Date</th>
+        <td class="text-center">{{ rolling.createDt }}</td>
+      </tr>
+
+      <tr>
+        <th class="text-center"></th>
+        <td class="text-center">
+          <v-btn class="ma-4" color="success" @click="emits('handleMoveList')">List</v-btn>
+          <v-btn class="ma-4" color="info" @click="emits('handleMoveModify')">MOD</v-btn>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
-  import axios from "axios";
-  import {useRoute, useRouter} from "vue-router";
-  import RollingModalComponent from "@/components/rolling/RollingModalComponent.vue";
-
-  const searchBox = ref({item: ['ID', 'Name'], searchType: 'ID', searchValue: ''})
-  const pageInfo = ref({pageNum: 1, pageSize: 10, length: 13, start: 1})
-  const infoLists = ref([])
-  const loading = ref(false)
-
-  const router = useRouter()
-  const route = useRoute()
-
-  const rollingId = route.params.id;
-  const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
-  const replies = ref(data.replyDTOs)
-  const targetName = data.targetName
+import {getImagePath, getRolling} from "@/apis/rolling/RollingApis";
+  import {ref} from "vue";
+  import {useRoute} from "vue-router";
 
 
-  const dialog = ref(false)
-  const changeDialogStatus = () => {
-    dialog.value = !dialog.value
+  const rolling = ref({})
+  const props = defineProps(['id'])
+  const emits = defineEmits(['handleMoveModify', 'handleMoveList'])
+
+
+  const getRollingOne = async () => {
+    const res = await getRolling( props.id )
+    rolling.value = res.data
+    console.log(res.data)
   }
 
-  const moveDetail = (id) => {
-    router.push({name: 'RollingDetail', params: {'id': id}})
-  }
 
-const saveReply = async (reply) =>{
-  //http://armysseung.iptime.org:3258/api/rolling/postRollingPaper
-  await axios.post(`http://localhost:8080/api/reply`,reply).then( async ()=>{
-    const {data} = await axios.get(`http://armysseung.iptime.org:3258/api/rolling/` + rollingId)
-    replies.value = data.replyDTOs
-  })
-  changeDialogStatus()
-}
+  getRollingOne()
 </script>
 
 <style scoped>
-  .listWrap {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 auto;
-    /*width: 80vw;*/
-    /*height: 90vh;*/
-  }
-
-  .loadBtn {
-    margin-left: 1em;
-  }
-
-  .searchBox {
-    display: flex;
-    width: 18vw;
-    float: right;
-  }
-
-  .searchTypeBox {
-    width: 6vw;
-  }
-
-  .searchValueBox {
-    width: 12vw;
-  }
 </style>

@@ -60,7 +60,7 @@ import {ref, watch} from "vue";
 
   const handleClickAdd = async () => {
     await addRolling(rollingInfo.value)
-    emits('handleMoveList')
+   // emits('handleMoveList')
   }
 
   const addFile = (files) => {

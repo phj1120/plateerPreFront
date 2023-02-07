@@ -21,7 +21,7 @@
         <td class="text-center">
           <v-row class="ma-2">
             <div style="margin: 0 auto">
-              <img class="ma-2" v-for="img in rolling.imgSrcs" :src="getImagePath(img)" width="300" />
+              <img class="ma-2" v-for="img in rolling.files" :src="getImagePath(img.fileName)" width="300" />
             </div>
           </v-row>
 <!--          {{ rolling.imgSrcs }}-->
@@ -62,8 +62,8 @@ import {getImagePath, getRolling} from "@/apis/rolling/RollingApis";
 
   const getRollingOne = async () => {
     const res = await getRolling( props.id )
-    rolling.value = res.data
-    console.log(res.data)
+    rolling.value = res
+    console.log(res)
   }
 
 

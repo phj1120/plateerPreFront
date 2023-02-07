@@ -85,7 +85,7 @@ const handleClickDialog = () => {
 const getRollingOne = async () => {
   const res = await getRolling(props.id)
 
-  rolling.value = res.data
+  rolling.value = res
 }
 
 const clickModifyBtn = async () => {

@@ -63,7 +63,7 @@ import {getImagePath, getRolling} from "@/apis/rolling/RollingApis";
   const getRollingOne = async () => {
     const res = await getRolling( props.id )
     rolling.value = res
-    console.log(res)
+
   }
 
 

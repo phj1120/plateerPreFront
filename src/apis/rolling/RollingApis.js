@@ -69,5 +69,8 @@ export const deleteRolling = async (id) => {
 }
 
 export const getImagePath = (path) => {
+  if(!path) {
+    path = 's_84c07827-9ec6-4f7f-b676-8f6e2cc2893c.png'
+  }
   return `${domain}/image/${path}`
 }
